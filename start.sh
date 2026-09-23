@@ -2,25 +2,25 @@
 set -Eeuo pipefail
 
 # ============================================================
-# SpiderPanel Universal Installer / Manager
+# newyorkPanel Universal Installer / Manager
 # ============================================================
 
-APP_DIR="${SPIDER_APP_DIR:-/opt/SpiderPanel}"
-REPO="${SPIDER_REPO:-https://github.com/amirh00sain/SpiderPanel.git}"
-BRANCH="${SPIDER_BRANCH:-main}"
+APP_DIR="${newyork_APP_DIR:-/opt/newyorkPanel}"
+REPO="${newyork_REPO:-https://github.com/amirh00sain/newyorkPanel.git}"
+BRANCH="${newyork_BRANCH:-main}"
 
-INSTALLER_URL="${SPIDER_INSTALLER_URL:-https://raw.githubusercontent.com/amirh00sain/SpiderPanel/main/start.sh}"
+INSTALLER_URL="${newyork_INSTALLER_URL:-https://raw.githubusercontent.com/amirh00sain/newyorkPanel/main/start.sh}"
 
-ENV_FILE="/etc/spider-panel.env"
-SERVICE="spider-panel"
+ENV_FILE="/etc/newyork-panel.env"
+SERVICE="newyork-panel"
 
 PORT="8080"
 
 VENV="$APP_DIR/.venv"
-PIDFILE="$APP_DIR/spiderpanel.pid"
-LOGFILE="$APP_DIR/spiderpanel.log"
+PIDFILE="$APP_DIR/newyorkpanel.pid"
+LOGFILE="$APP_DIR/newyorkpanel.log"
 
-CLI="/usr/local/bin/spiderpanel"
+CLI="/usr/local/bin/newyorkpanel"
 
 XRAY="$APP_DIR/xray/xray"
 MTPROXY="/usr/local/bin/mtproto-proxy"
@@ -28,10 +28,10 @@ MTPROXY="/usr/local/bin/mtproto-proxy"
 UV="/usr/local/bin/uv"
 
 # Pin uv to a known release.
-UV_VERSION="${SPIDER_UV_VERSION:-0.12.9}"
+UV_VERSION="${newyork_UV_VERSION:-0.12.9}"
 
 # Xray version.
-XRAY_VERSION="${SPIDER_XRAY_VERSION:-26.3.27}"
+XRAY_VERSION="${newyork_XRAY_VERSION:-26.3.27}"
 
 TMP_ROOT=""
 
@@ -47,7 +47,7 @@ IS_CODESPACE=0
 # ============================================================
 
 log() {
-    printf '[SpiderPanel] %s\n' "$*"
+    printf '[newyorkPanel] %s\n' "$*"
 }
 
 ok() {
@@ -92,7 +92,7 @@ root() {
 
     local f
 
-    f="$(mktemp /tmp/spiderpanel-root.XXXXXX)"
+    f="$(mktemp /tmp/newyorkpanel-root.XXXXXX)"
 
     curl -fsSL \
         --retry 5 \
@@ -385,9 +385,9 @@ packages() {
 
 download_repo() {
 
-    TMP_ROOT="$(mktemp -d /tmp/spiderpanel.XXXXXX)"
+    TMP_ROOT="$(mktemp -d /tmp/newyorkpanel.XXXXXX)"
 
-    log "Downloading SpiderPanel..."
+    log "Downloading newyorkPanel..."
 
     git clone \
         --depth 1 \
@@ -607,7 +607,7 @@ install_uv() {
     log "Downloading official uv binary..."
 
 
-    tmp="$(mktemp -d /tmp/spiderpanel-uv.XXXXXX)"
+    tmp="$(mktemp -d /tmp/newyorkpanel-uv.XXXXXX)"
 
     archive_path="$tmp/$archive"
 
@@ -938,12 +938,12 @@ ADMIN_PASSWORD=$password
 PORT=8080
 HOST=0.0.0.0
 DATA_DIR=$APP_DIR/data
-SPIDER_DATA_DIR=$APP_DIR/data
+newyork_DATA_DIR=$APP_DIR/data
 XRAY_BIN=$XRAY
 MTPROTO_PROXY_BIN=$MTPROXY
 WORKER_SYNC_INTERVAL=3600
-SPIDER_PANEL_PUBLIC_URL=
-SPIDER_PANEL_PUBLIC_DOMAIN=
+newyork_PANEL_PUBLIC_URL=
+newyork_PANEL_PUBLIC_DOMAIN=
 PUBLIC_ENDPOINT_RETRY_SECONDS=5
 PUBLIC_ENDPOINT_REFRESH_SECONDS=60
 PYTHONUNBUFFERED=1
@@ -956,18 +956,18 @@ EOF
 
 
     cat > "$APP_DIR/INSTALL-CREDENTIALS.txt" <<EOF
-SpiderPanel
+newyorkPanel
 ===========
 
 Local URL:
-http://127.0.0.1:8080/spider
+http://127.0.0.1:8080/newyork
 
 Listen Port:
 8080
 
 Public URL:
 The panel discovers the public domain automatically. You can also set
-SPIDER_PANEL_PUBLIC_URL or SPIDER_PANEL_PUBLIC_DOMAIN explicitly.
+newyork_PANEL_PUBLIC_URL or newyork_PANEL_PUBLIC_DOMAIN explicitly.
 
 Admin Password:
 $password
@@ -1217,7 +1217,7 @@ create_service() {
 
     cat > "/etc/systemd/system/$SERVICE.service" <<EOF
 [Unit]
-Description=SpiderPanel
+Description=newyorkPanel
 After=network-online.target
 Wants=network-online.target
 
@@ -1303,7 +1303,7 @@ start_panel() {
 
         if running; then
 
-            ok "SpiderPanel already running."
+            ok "newyorkPanel already running."
 
             return 0
         fi
@@ -1332,13 +1332,13 @@ start_panel() {
 
     if running; then
 
-        ok "SpiderPanel is running."
+        ok "newyorkPanel is running."
 
         return 0
     fi
 
 
-    printf '[ERROR] SpiderPanel failed to start.\n' >&2
+    printf '[ERROR] newyorkPanel failed to start.\n' >&2
 
 
     if systemd_ok; then
@@ -1408,7 +1408,7 @@ stop_panel() {
     fi
 
 
-    ok "SpiderPanel stopped."
+    ok "newyorkPanel stopped."
 }
 
 
@@ -1420,7 +1420,7 @@ status_panel() {
 
     echo
 
-    echo "SpiderPanel status"
+    echo "newyorkPanel status"
     echo "------------------"
 
     echo "OS: $OS_NAME"
@@ -1539,27 +1539,27 @@ info_panel() {
     echo
 
     echo "================================================"
-    echo "                 SPIDERPANEL"
+    echo "                 newyorkPANEL"
     echo "================================================"
 
 
     # Panel port is intentionally fixed. Deployers may inject PORT, but
-    # SpiderPanel always listens on 8080.
+    # newyorkPanel always listens on 8080.
     local listen_port="8080"
 
-    echo "Local URL: http://127.0.0.1:${listen_port}/spider"
+    echo "Local URL: http://127.0.0.1:${listen_port}/newyork"
 
 
     if [[ -n "$local_ip" ]]; then
 
-        echo "LAN URL: http://${local_ip}:${listen_port}/spider"
+        echo "LAN URL: http://${local_ip}:${listen_port}/newyork"
 
     fi
 
 
     if [[ -n "$ip" ]]; then
 
-        echo "Public IP URL: http://${ip}:${listen_port}/spider"
+        echo "Public IP URL: http://${ip}:${listen_port}/newyork"
 
     fi
 
@@ -1570,7 +1570,7 @@ info_panel() {
 
         local domain="${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN:-app.github.dev}"
 
-        echo "Codespace URL: https://${CODESPACE_NAME}-8080.${domain}/spider"
+        echo "Codespace URL: https://${CODESPACE_NAME}-8080.${domain}/newyork"
 
         echo "Forward port 8080 in Codespaces."
 
@@ -1597,15 +1597,15 @@ info_panel() {
 
     echo "Commands:"
 
-    echo "  spiderpanel"
-    echo "  spiderpanel info"
-    echo "  spiderpanel status"
-    echo "  spiderpanel start"
-    echo "  spiderpanel stop"
-    echo "  spiderpanel restart"
-    echo "  spiderpanel update"
-    echo "  spiderpanel logs"
-    echo "  spiderpanel uninstall"
+    echo "  newyorkpanel"
+    echo "  newyorkpanel info"
+    echo "  newyorkpanel status"
+    echo "  newyorkpanel start"
+    echo "  newyorkpanel stop"
+    echo "  newyorkpanel restart"
+    echo "  newyorkpanel update"
+    echo "  newyorkpanel logs"
+    echo "  newyorkpanel uninstall"
 
     echo
 
@@ -1646,7 +1646,7 @@ update_panel() {
 
     local f=""
 
-    f="$(mktemp /tmp/spiderpanel-update.XXXXXX)"
+    f="$(mktemp /tmp/newyorkpanel-update.XXXXXX)"
 
 
     curl \
@@ -1676,7 +1676,7 @@ uninstall_panel() {
 
     echo
 
-    echo "This will remove SpiderPanel."
+    echo "This will remove newyorkPanel."
 
     echo
 
@@ -1724,7 +1724,7 @@ uninstall_panel() {
     rm -rf "$APP_DIR"
 
 
-    ok "SpiderPanel removed."
+    ok "newyorkPanel removed."
 }
 
 
@@ -1739,10 +1739,10 @@ create_cli() {
 
 set -e
 
-APP="/opt/SpiderPanel"
+APP="/opt/newyorkPanel"
 
 if [[ ! -f "$APP/start.sh" ]]; then
-    echo "SpiderPanel is not installed."
+    echo "newyorkPanel is not installed."
     exit 1
 fi
 
@@ -1786,7 +1786,7 @@ case "${1:-menu}" in
 
     *)
         echo
-        echo "SpiderPanel"
+        echo "newyorkPanel"
         echo
         echo "1) Info"
         echo "2) Status"
@@ -1853,7 +1853,7 @@ EOF
 
     chmod 755 "$CLI"
 
-    ok "Global command installed: spiderpanel"
+    ok "Global command installed: newyorkpanel"
 }
 
 
@@ -1870,7 +1870,7 @@ install_panel() {
 
     echo
 
-    log "Installing SpiderPanel..."
+    log "Installing newyorkPanel..."
 
     log "OS: $OS_NAME"
 
@@ -2029,7 +2029,7 @@ main() {
         *)
 
             echo
-            echo "SpiderPanel Universal Installer"
+            echo "newyorkPanel Universal Installer"
             echo
             echo "Usage:"
             echo
